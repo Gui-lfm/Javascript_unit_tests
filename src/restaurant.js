@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 /* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable max-len */
 
@@ -42,16 +43,31 @@ const createMenu = (object) => {
         const price = Object.values(itens[i]);
 
         for (let j = 0; j < element.length; j += 1) {
-          if (menuReceived.consumption.includes(element[j])) {
-            valorTotal += price[j];
+          let itemAtual = element[j];
+          const consumed = menuReceived.consumption;
+          for (let k = 0; k < consumed.length; k += 1) {
+            if (itemAtual === consumed[k]) {
+              valorTotal += price[j];
+            }
           }
         }
       }
-      return (valorTotal * 1.1).toFixed(2);
+
+      return parseFloat((valorTotal * 1.1).toFixed(2));
     },
   };
 
   return menuReceived;
 };
+
+const meuRestaurante = createMenu({
+  food: { coxinha: 3.9, sopa: 9.9 },
+  drink: { agua: 3.9, cerveja: 6.9 },
+});
+meuRestaurante.order('coxinha');
+meuRestaurante.order('agua');
+meuRestaurante.order('coxinha');
+
+console.log(typeof meuRestaurante.pay());
 
 module.exports = createMenu;
