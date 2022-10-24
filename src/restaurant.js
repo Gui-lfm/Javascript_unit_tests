@@ -1,5 +1,3 @@
-/* eslint-disable complexity */
-/* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable max-len */
 
 /*
@@ -36,22 +34,15 @@ const createMenu = (object) => {
     order: (request) => menuReceived.consumption.push(request),
     pay: () => {
       const itens = Object.values(object);
+      const comanda = menuReceived.consumption;
+
+      const cardapioCompleto = { ...itens[0], ...itens[1] };
       let valorTotal = 0;
-
-      for (let i = 0; i < itens.length; i += 1) {
-        const element = Object.keys(itens[i]);
-        const price = Object.values(itens[i]);
-
-        for (let j = 0; j < element.length; j += 1) {
-          let itemAtual = element[j];
-          const consumed = menuReceived.consumption;
-          for (let k = 0; k < consumed.length; k += 1) {
-            if (itemAtual === consumed[k]) {
-              valorTotal += price[j];
-            }
-          }
+      comanda.forEach((itemAtual) => {
+        if (Object.prototype.hasOwnProperty.call(cardapioCompleto, itemAtual)) {
+          valorTotal += cardapioCompleto[itemAtual];
         }
-      }
+      });
 
       return parseFloat((valorTotal * 1.1).toFixed(2));
     },
@@ -68,6 +59,6 @@ meuRestaurante.order('coxinha');
 meuRestaurante.order('agua');
 meuRestaurante.order('coxinha');
 
-console.log(typeof meuRestaurante.pay());
+console.log(meuRestaurante.pay()); // 12.87
 
 module.exports = createMenu;
